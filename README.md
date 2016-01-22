@@ -1,5 +1,5 @@
 # Multistream
-Displays hitbox and twitch streams that are currently online in a single browser window. It will continue to monitor the streams and update when they come online or go offline.
+Displays [hitbox.tv](http://www.hitbox.tv/) and [twitch.tv](http://www.twitch.tv/) streams that are currently online in a single browser window. It will continue to monitor the streams and update when they come online or go offline.
 
 ### Working Example
 
