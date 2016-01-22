@@ -10,7 +10,7 @@
 
 
 // Builds the database. Set this to true if first time running or else this wont work.
-$buildDatabase = false;
+$buildTable = false;
 
 require_once("multi_logins.php");
 header('Content-Type: application/json');
@@ -35,7 +35,7 @@ $words = array(
 $mysqli = new mysqli($SQL_data["domain"], $SQL_data["user"], $SQL_data["password"], $SQL_data["database"]);
 
 // Creates table if it doesn't exist. Change to if(1) if first time running
-if($buildDatabase)
+if($buildTable)
 {
 	$mysqli->query("
 		CREATE TABLE IF NOT EXISTS `Saved_lists_D8ebnsL` (

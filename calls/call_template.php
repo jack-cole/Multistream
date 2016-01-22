@@ -22,7 +22,7 @@ require_once("../multi_logins.php");
 date_default_timezone_set('America/Los_Angeles');
 
 // Builds the database. Set this to true if first time running or else this wont work.
-$buildDatabase = false;
+$buildTable = false;
 
 
 $website_underscored = str_replace(".", "_", $website);
@@ -48,7 +48,7 @@ if ($mysqli->connect_errno)
 		file_put_contents ( "{$website_underscored}_error.txt" , date('l jS \of F Y h:i:s A')." "."Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error."\n", FILE_APPEND);
 
 // Creates table if it doesn't exist.
-if($buildDatabase)
+if($buildTable)
 {
 	$mysqli->query("
 		CREATE TABLE `{$SQL_data["table"]}` (
