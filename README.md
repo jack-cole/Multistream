@@ -3,9 +3,9 @@ Displays [hitbox.tv](http://www.hitbox.tv/) and [twitch.tv](http://www.twitch.tv
 
 ### Working Example
 
-[Multistream on jack-cole.com](http://www.jack-cole.com/multistream/)
+[Multistream on jack-cole.com](http://www.jack-cole.com/multistream/) Click the question mark at the top right for more help.
 
-Head over to [hitbox.tv](http://www.hitbox.tv/) or [twitch.tv](http://www.twitch.tv/) and find some live channels to add. Click the question mark at the top right for more help.
+Head over to [hitbox.tv](http://www.hitbox.tv/) or [twitch.tv](http://www.twitch.tv/) and find some live channels to add. 
 
 
 ## Using the Stream Page
