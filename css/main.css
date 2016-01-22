@@ -1,0 +1,231 @@
+/*
+	main.css
+*/
+
+@font-face {
+			font-family: future_font;
+			src: url('../fonts/D3Euronism.ttf');
+		}
+body{
+	margin:0;
+	background-color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	
+}
+.header{
+	height: 50px;
+	width: 100%;
+	background-color: rgba(0,0,0,0.8);
+	position: fixed;
+	z-index: 30;
+}
+	.header .inner_header{
+		height: 100%;
+		max-width: 940px;
+		margin: 0 auto;
+		color: #fff;
+		font-family: future_font;
+		text-align: center;
+	}
+	.header .title{
+		float: left;
+		font-size: 24pt;
+		cursor: default;
+	}
+	.header .header_link{
+		cursor: pointer;
+		float: right;
+		font-size: 24pt;
+		margin: 0 10px;
+	}
+	.header .header_link:hover{
+		color: rgb(200, 200, 255);
+	}
+	.header .header_link:active{
+		color: rgb(139, 139, 255);
+	}
+.stream_windows_filler{
+	width: 100%;
+	height:100%;
+	z-index: 0;
+}
+.stream_windows{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	background-image: url(../img/whitenoise-361x370.png);
+	z-index: 10;
+}
+	.live_stream_container{
+		margin: 0;
+		display: inline-block;
+		position:relative;
+	}
+		.live_stream
+		{
+			width: 100%;
+			height: 100%;
+		}
+
+.stream_input{
+	position: relative;
+	height: 100%;
+	max-width: 650px;
+	margin: 0 auto;
+	color: #ffffff;
+	text-align: center;
+	z-index: 20;
+	pointer-events: none;
+}
+
+	.stream_input .input_box{
+		margin: 50px 30px 0 30px;
+		background: #ffffff;
+		width: 100%;
+		padding: 0 20px 20px 20px;
+		overflow: hidden;
+		display: inline-block;
+		pointer-events: all;
+	}
+	.stream_input .input_box h2{
+		color:#000;
+	}
+		.stream_input .input_box form{
+			text-align: middle;
+		}
+		.input_box .input_text{
+			padding: 9px 8px 8px;
+			width: 450px;
+		}
+		.input_box .input_submit{
+			color: #ffffff;
+			border: 0;
+			border-radius: 2px;
+			font-size: 1em;
+			padding: 10px 20px;
+		}
+		.input_submit.twitch_tv{
+			background: #6441a5;
+		}
+			.input_submit.twitch_tv:hover{
+				background: #805dc2;;
+			}
+		.input_submit.hitbox_tv{
+			background: #262626;
+		}
+			.input_submit.hitbox_tv:hover{
+				background: #4A4A4A;
+			}
+	
+	.stream_input .display_list{
+		color: #000000;
+		margin: 50px 30px 0 30px;
+		background: #ffffff;
+		padding: 0 20px 20px 20px;
+		width: 100%;
+		overflow: hidden;
+		display: inline-block;
+		pointer-events: all;
+		position: relative;
+	}
+		.stream_input .display_list .stream_status{
+				padding: 7px 10px 7px 10px;
+				text-decoration: none;
+				-webkit-border-radius: 17;
+				-moz-border-radius: 17;
+				border-radius: 17px;
+				font-family: Arial;
+				color: #ffffff;
+				font-size: 12px;
+				display: inline-block;
+				cursor: default;
+				position: relative;
+				margin: 0 0 0 8px;
+			}
+
+		.stream_input .display_list .online, .stream_input .display_list .offline{
+			margin: 0 0 10px 0;
+		}
+			.stream_input .display_list .online .stream_status.twitch_tv{
+				background: #6441a5;
+				}
+					.stream_input .display_list .online .stream_status.twitch_tv:hover {
+						background: #805dc2;
+					}
+			.stream_input .display_list .online .stream_status.hitbox_tv{
+				background: #262626;
+				}
+				.stream_input .display_list .online .stream_status.hitbox_tv:hover{
+					background: #4A4A4A;
+				}
+				.stream_input .display_list .stream_status a.close{
+					position: absolute;
+					top: -6px;
+					right: -6px;
+					border-radius: 40px;
+					width: 15px;
+					height: 15px;
+					border-top: 1px solid #b50000;
+					background: #b50404;
+					background: -webkit-gradient(linear, left top, left bottom, from(#ff0000), to(#b50404));
+					background: -webkit-linear-gradient(top, #ff0000, #b50404);
+					background: -moz-linear-gradient(top, #ff0000, #b50404);
+					background: -ms-linear-gradient(top, #ff0000, #b50404);
+					background: -o-linear-gradient(top, #ff0000, #b50404);
+					z-index: 10;
+					cursor: pointer;
+				}
+		.stream_input .display_list .offline .stream_status{
+			background: #c4c4c4;
+			}
+			.stream_input .display_list .offline .stream_status:hover{
+				background: #f0f0f0;
+			}
+		.stream_input .display_list .save_container{
+			position: absolute;
+			top: 7px;
+			right: 5px;
+		}
+			.stream_input .display_list .save_container > a{
+				float:right;
+				width: 24px;
+				height: 24px;
+				display: inline-block;
+				background-size: 100%;
+				background-repeat: no-repeat;
+				margin: 0 10px 0 0;
+				display:none;
+				cursor: pointer;
+
+			}
+			.stream_input .display_list .save_container .save{
+				background-image: url(../img/save.png);
+			}
+			.stream_input .display_list .save_container .link{
+				background-image: url(../img/link.png);
+			}
+			.stream_input .display_list .save_container .bookmark{
+				background-image: url(../img/bookmark.png);
+			}
+			.stream_input .display_list .save_container .loading{
+				background-image: url(../img/ajax-loader.gif);
+			}
+.help_overlay{
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	background-color: rgba(0,0,0,0.5);
+	cursor: pointer;
+}
+	.help_overlay img{
+		margin: auto;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		max-width: 100%;
+		max-height: 100%;
+	}

@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<link href="img/favicon.png" rel="shortcut icon" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script src="js/main.js"></script>
+	</head>
+	<body>
+
+		<div class="help_overlay">
+			<img src="img/help.jpg">
+		</div>
+		<header class="header">
+			<div class="inner_header">
+				<span class="title">Multistreamer</span>
+				<span class="header_link help" data-enabled="true">?</span>		
+				<span class="header_link clear_streams">X</span>
+				<span class="header_link add_streams">+</span>
+				<span class="header_link auto_hide" data-enabled="true">-</span>
+				<span class="header_link reposition" data-enabled="true">Boxed</span>		
+			</div>
+		</header>
+	
+		<section class="stream_windows">			
+		</section>
+		<div class="stream_windows_filler"></div>
+		<section class="stream_input">
+			<div class="input_box">
+				<h2>Enter the names of the streams</h2>
+				<form class="add_twitch_tv_streams" data-website="twitch_tv" action="javascript:alert( 'something went wrong...' );">
+					<input class="input_text twitch_tv" type="text" name="twitch_tv">
+					<input class="input_submit twitch_tv" type="submit" value="Add twitch.tv streams">
+				</form>
+				<form class="add_hitbox_tv_streams"data-website="hitbox_tv" action="javascript:alert( 'something went wrong...' );">
+					<input class="input_text hitbox_tv" type="text" name="hitbox_tv">
+					<input class="input_submit hitbox_tv" type="submit" value="Add hitbox.tv streams">
+				</form>
+				
+			</div>
+			<div class="display_list">
+				<h2>Active Streams</h2>
+
+				<div class="online"></div>
+				<div class="offline"></div>
+				<div class="save_container">
+					<a class="save" onclick="javascript: SaveStream_SaveAndGetName();"></a>
+					<a class="link"></a>
+					<a class="bookmark"></a>
+				</div>
+			</div>
+		</section>
+
+
+	</body>
+</html>
