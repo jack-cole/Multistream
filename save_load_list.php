@@ -7,13 +7,17 @@
 */
 
 
+
+require_once("/special_logins/multi_logins.php");
 header('Content-Type: application/json');
+
+$SQL_data = new MultiLogins();
 
 //SQL login information
 $SQL_data = array(
-		"user" => "yevlwpcu_multi",
-		"password" => "IE{du;4lvO;l0TaTnD",
-		"database" => "yevlwpcu_multistream",
+		"user" => $SQL_data.DatabaseLogin(),
+		"password" => $SQL_data.DatabasePassword(),
+		"database" => $SQL_data.DatabaseName(),
 		"domain" => "localhost",
 		"table" => "Saved_lists_D8ebnsL"
 	);
