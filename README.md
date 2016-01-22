@@ -5,7 +5,7 @@ Displays [hitbox.tv](http://www.hitbox.tv/) and [twitch.tv](http://www.twitch.tv
 
 [Multistream on jack-cole.com](http://www.jack-cole.com/multistream/)
 
-Head over to [hitbox.tv](http://www.hitbox.tv/) or [twitch.tv](http://www.twitch.tv/) and find some live channels to add. Click the ? for more help.
+Head over to [hitbox.tv](http://www.hitbox.tv/) or [twitch.tv](http://www.twitch.tv/) and find some live channels to add. Click the question mark at the top right for more help.
 
 
 ## Using the Stream Page
@@ -16,12 +16,14 @@ Head over to [hitbox.tv](http://www.hitbox.tv/) or [twitch.tv](http://www.twitch
 
 ## Installation on your own server
 
-* Extract files to folder on server
-* Create database on your server and save the name, login, password
-* Open **multi_logins_example.php** and change the values to match your database information
-* Rename it to **multi_logins.php**
-* Open **call_template.php** and **save_load_list.php** and set *$buildTable = true*
-* set **/calls/call_hitbox.php** and **/calls/call_twitch.php** to be on a cron job every minute
+1. Extract files to folder on server
+2. Create database on your server and save the name, login, password
+3. Open **multi_logins_example.php** and change the values to match your database information
+4. Rename it to **multi_logins.php**
+5. Open **call_template.php** and **save_load_list.php** and set *$buildTable = true*
+6. set **/calls/call_hitbox.php** and **/calls/call_twitch.php** each as a cron job that executes every minute
+	1. \*	\*	\*	\*	\*	php -q /youwebserver/multistream/calls/call_twitch.php
+	2. \*	\*	\*	\*	\*	php -q /youwebserver/multistream/calls/call_hitbox.php
 
 Then to test it, go to **index.html**, then find an online stream on [hitbox.tv](http://www.hitbox.tv/) or [twitch.tv](http://www.twitch.tv/) and then add it to the list and wait 10 seconds. If a stream appears, then the everything works with the streams table.
 
