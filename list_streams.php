@@ -1,22 +1,27 @@
 <?php
-
 /*
 	list_streams.php
-	This file will take URL variables with the names of streams, and retreive information for the MySQL database about their online status.
-	Also, the time at which they were accessed will also be updated. Then the information will be outputted in a json format to be used on the front page.
+	This is accessed by the front page of the multistream site to see what streams are marked as online in the database.
+	At the same time, it puts in the database that certain streams were checked at the current time. This lets the cron jobs
+	running the hitbox and twitch calls to know what streams to check.
 */
 
+if(isset($_GET["test"]))
+{
+	error_reporting(-1);
+	ini_set('display_errors', 1);
+}
 
-require_once("/special_logins/multi_logins.php");
+require_once("multi_logins.php");
 header('Content-Type: application/json');
 
-$SQL_data = new MultiLogins();
+$MultistreamLoginInfo = new MultiLogins();
 
 //SQL login information
 $SQL_data = array(
-		"user" => $SQL_data.DatabaseLogin(),
-		"password" => $SQL_data.DatabasePassword(),
-		"database" => $SQL_data.DatabaseName(),
+		"user" => $MultistreamLoginInfo->DatabaseLogin(),
+		"password" => $MultistreamLoginInfo->DatabasePassword(),
+		"database" => $MultistreamLoginInfo->DatabaseName(),
 		"domain" => "localhost"
 	);
 

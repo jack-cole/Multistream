@@ -12,19 +12,28 @@
 	MAIN PROGRAM OPERATIONS
 */
 
+//error_reporting(-1);
+//ini_set('display_errors', 1);
+
 // Check if $website is defined, and exit the program if it isn't.
 if(!isset($website))
 	exit("\$website was not defined.");
-
+require_once("../multi_logins.php");
 date_default_timezone_set('America/Los_Angeles');
+
+// Builds the database. Set this to true if first time running or else this wont work.
+$buildDatabase = false;
+
 
 $website_underscored = str_replace(".", "_", $website);
 
+$MultistreamLoginInfo = new MultiLogins();
+
 //SQL login information
 $SQL_data = array(
-		"user" => "yevlwpcu_multi",
-		"password" => "IE{du;4lvO;l0TaTnD",
-		"database" => "yevlwpcu_multistream",
+		"user" => $MultistreamLoginInfo->DatabaseLogin(),
+		"password" => $MultistreamLoginInfo->DatabasePassword(),
+		"database" => $MultistreamLoginInfo->DatabaseName(),
 		"domain" => "localhost",
 		"table" => "Streams_".$website_underscored."_u7dz2"
 	);
@@ -38,6 +47,24 @@ $mysqli = new mysqli($SQL_data["domain"], $SQL_data["user"], $SQL_data["password
 if ($mysqli->connect_errno)
 		file_put_contents ( "{$website_underscored}_error.txt" , date('l jS \of F Y h:i:s A')." "."Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error."\n", FILE_APPEND);
 
+// Creates table if it doesn't exist.
+if($buildDatabase)
+{
+	$mysqli->query("
+		CREATE TABLE `{$SQL_data["table"]}` (
+		`username` varchar(255) NOT NULL COMMENT 'lowercase username of the streamer',
+		`displayName` varchar(255) NOT NULL COMMENT 'The display name relating to case sensitivity',
+		`lastUpdate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+		`lastRequest` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The last time someone requested an update on this stream',
+		`online` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Online Status',
+		`error` timestamp NULL DEFAULT NULL COMMENT 'Last time a channel had an error when calling for it',
+		`errortype` varchar(11) NOT NULL DEFAULT '0' COMMENT 'The reason that the channel errored out. Usually does not exist',
+		PRIMARY KEY (`username`),
+		KEY `lastUpdate` (`lastUpdate`)
+		) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+	");
+}
+
 // Decides whether to delay the program
 $lastStreamRun = false;
 // Loops the program for 60 seconds
@@ -49,7 +76,7 @@ while((time() - $start_time) < 60)
 	// And there has to have been a request for them by a user in the last 60 seconds
 	$stream_list = $mysqli->query(
 		"SELECT *
-		FROM {$SQL_data[table]}
+		FROM {$SQL_data["table"]}
 		WHERE 
 			(
 				error is null
@@ -86,7 +113,7 @@ while((time() - $start_time) < 60)
 
 				// Error means a 20 minute delay before next check
 				if($streaminfo == "no_media_found")
-					$mysqli->query("UPDATE {$SQL_data[table]} SET online=0, error=CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
+					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=0, error=CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
 
 				// Reconnects to database if disconnected
 				if(!mysqli_ping($mysqli))
@@ -97,12 +124,12 @@ while((time() - $start_time) < 60)
 				{
 					$displayName = $streaminfo->livestream[0]->media_user_name;
 					
-					$mysqli->query("UPDATE {$SQL_data[table]} SET online=1, lastUpdate = CURRENT_TIMESTAMP(), displayName = '$displayName' WHERE username='".$row["username"]."'");
+					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=1, lastUpdate = CURRENT_TIMESTAMP(), displayName = '$displayName' WHERE username='".$row["username"]."'");
 				
 				}
 				else if((string)$streaminfo->livestream[0]->media_is_live == "0")
 				{
-					$mysqli->query("UPDATE {$SQL_data[table]} SET online=0, lastUpdate = CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
+					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=0, lastUpdate = CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
 				}
 
 				break;
@@ -118,16 +145,16 @@ while((time() - $start_time) < 60)
 
 				// Error means a 20 minute delay before next check
 				if(isset($streaminfo->error))
-					$mysqli->query("UPDATE {$SQL_data[table]} SET online=0, error=CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
+					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=0, error=CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
 				// Update database with online status
 				elseif(isset($streaminfo->stream->channel->name))
 				{
 					$displayName = $streaminfo->stream->channel->display_name;
-					$mysqli->query("UPDATE {$SQL_data[table]} SET online=1, lastUpdate = CURRENT_TIMESTAMP(), displayName = '$displayName' WHERE username='".$row["username"]."'");
+					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=1, lastUpdate = CURRENT_TIMESTAMP(), displayName = '$displayName' WHERE username='".$row["username"]."'");
 
 				}
 				else
-					$mysqli->query("UPDATE {$SQL_data[table]} SET online=0, lastUpdate = CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
+					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=0, lastUpdate = CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
 				break;
 		}
 	}// for($i = 1; $i <= $number_of_results; $i++)

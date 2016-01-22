@@ -2,22 +2,27 @@
 
 /*
 	list_streams.php
-	This file will take URL variables with the names of streams, and retreive information for the MySQL database about their online status.
-	Also, the time at which they were accessed will also be updated. Then the information will be outputted in a json format to be used on the front page.
+	This is called when someone loads or saves a stream list, so they don't have to manually add the streams every time.
 */
 
+// error_reporting(-1);
+// ini_set('display_errors', 1);
 
 
-require_once("/special_logins/multi_logins.php");
+// Builds the database. Set this to true if first time running or else this wont work.
+$buildDatabase = false;
+
+require_once("multi_logins.php");
 header('Content-Type: application/json');
+$MultistreamLoginInfo = new MultiLogins();
 
-$SQL_data = new MultiLogins();
+
 
 //SQL login information
 $SQL_data = array(
-		"user" => $SQL_data.DatabaseLogin(),
-		"password" => $SQL_data.DatabasePassword(),
-		"database" => $SQL_data.DatabaseName(),
+		"user" => $MultistreamLoginInfo->DatabaseLogin(),
+		"password" => $MultistreamLoginInfo->DatabasePassword(),
+		"database" => $MultistreamLoginInfo->DatabaseName(),
 		"domain" => "localhost",
 		"table" => "Saved_lists_D8ebnsL"
 	);
@@ -28,6 +33,19 @@ $words = array(
 
 // Connect to SQL Database
 $mysqli = new mysqli($SQL_data["domain"], $SQL_data["user"], $SQL_data["password"], $SQL_data["database"]);
+
+// Creates table if it doesn't exist. Change to if(1) if first time running
+if($buildDatabase)
+{
+	$mysqli->query("
+		CREATE TABLE IF NOT EXISTS `Saved_lists_D8ebnsL` (
+		`name` varchar(255) NOT NULL,
+		`hitbox_tv` varchar(5000) NOT NULL,
+		`twitch_tv` varchar(5000) NOT NULL,
+		PRIMARY KEY (`name`)
+		) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+	");
+}
 
 if(isset($_GET["testing"]))
 	$_POST = $_GET;
