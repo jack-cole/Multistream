@@ -12,16 +12,16 @@ if(isset($_GET["test"]))
 	ini_set('display_errors', 1);
 }
 
-require_once("multi_logins.php");
+
 header('Content-Type: application/json');
 
-$MultistreamLoginInfo = new MultiLogins();
+$MultistreamLoginInfo = require_once("multi_logins.php");
 
 //SQL login information
 $SQL_data = array(
-		"user" => $MultistreamLoginInfo->DatabaseLogin(),
-		"password" => $MultistreamLoginInfo->DatabasePassword(),
-		"database" => $MultistreamLoginInfo->DatabaseName(),
+		"user" => $MultistreamLoginInfo->DatabaseLogin,
+		"password" => $MultistreamLoginInfo->DatabasePassword,
+		"database" => $MultistreamLoginInfo->DatabaseName,
 		"domain" => "localhost"
 	);
 

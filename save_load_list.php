@@ -12,9 +12,9 @@
 // Builds the database. Set this to true if first time running or else this wont work.
 $buildTable = false;
 
-require_once("multi_logins.php");
+
 header('Content-Type: application/json');
-$MultistreamLoginInfo = new MultiLogins();
+$MultistreamLoginInfo = require_once("multi_logins.php");
 
 
 
