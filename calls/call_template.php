@@ -12,28 +12,48 @@
 	MAIN PROGRAM OPERATIONS
 */
 
-//error_reporting(-1);
-//ini_set('display_errors', 1);
+error_reporting(-1);
+ini_set('display_errors', 1);
+
+define("TESTING_ENABLED", true);
 
 // Check if $website is defined, and exit the program if it isn't.
 if(!isset($website))
 	exit("\$website was not defined.");
-require_once("../multi_logins.php");
+
 date_default_timezone_set('America/Los_Angeles');
+
+// sets configuration for server
+ini_set("allow_url_fopen", 1);
+ini_set("allow_url_include", 1);
+
 
 // Builds the database. Set this to true if first time running or else this wont work.
 $buildTable = false;
 
+// replacement function for file_get_contents
+$curl_connection = curl_init();
+function curl_get_contents($url)
+{
+	global $curl_connection;
+	$curl_connection = curl_init();
+	curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl_connection, CURLOPT_URL, $url);
+	$result = curl_exec($curl_connection);
+	return $result;
+}
 
 $website_underscored = str_replace(".", "_", $website);
 
-$MultistreamLoginInfo = new MultiLogins();
+
+$MultistreamLoginInfo = require_once("../multi_logins.php");
 
 //SQL login information
 $SQL_data = array(
-		"user" => $MultistreamLoginInfo->DatabaseLogin(),
-		"password" => $MultistreamLoginInfo->DatabasePassword(),
-		"database" => $MultistreamLoginInfo->DatabaseName(),
+		"user" => $MultistreamLoginInfo->DatabaseLogin,
+		"password" => $MultistreamLoginInfo->DatabasePassword,
+		"database" => $MultistreamLoginInfo->DatabaseName,
 		"domain" => "localhost",
 		"table" => "Streams_".$website_underscored."_u7dz2"
 	);
@@ -65,8 +85,6 @@ if($buildTable)
 	");
 }
 
-// Decides whether to delay the program
-$lastStreamRun = false;
 // Loops the program for 60 seconds
 $start_time =  time();
 while((time() - $start_time) < 60)
@@ -99,16 +117,16 @@ while((time() - $start_time) < 60)
 	// Operates on each result from the SQL call
 	for($i = 1; $i <= $number_of_results; $i++)
 	{
+		if(TESTING_ENABLED) echo "<pre>";
 		$row = $stream_list->fetch_assoc();
 		$row["username"] = strtolower($row["username"]);
-
-
 
 		switch($website)
 		{
 			case "hitbox.tv":
 				// Download stream information from hitbox
-				$streamdata = file_get_contents("http://api.hitbox.tv/media/live/".$row["username"]);
+				//$streamdata = file_get_contents("http://api.hitbox.tv/media/live/".$row["username"]);
+				$streamdata = curl_get_contents("http://api.hitbox.tv/media/live/".$row["username"]);
 				$streaminfo = json_decode($streamdata);
 
 				// Error means a 20 minute delay before next check
@@ -136,8 +154,11 @@ while((time() - $start_time) < 60)
 			case "twitch.tv":
 
 				// Download stream information from twitch
-				$streamdata = file_get_contents("https://api.twitch.tv/kraken/streams/".$row["username"]);
+				//$streamdata = file_get_contents("https://api.twitch.tv/kraken/streams/".$row["username"]."?client_id=fwppisnpgdmlkih902xkj90l59ezvx2");
+				$streamdata = curl_get_contents("https://api.twitch.tv/kraken/streams/".$row["username"]."?client_id="+$MultistreamLoginInfo->twitch_client_id);
 				$streaminfo = json_decode($streamdata);
+
+				if(TESTING_ENABLED) echo "streamData: <i>$streamdata</i>";
 				
 				// Reconnects to database if disconnected
 				if(!mysqli_ping($mysqli))
@@ -145,18 +166,27 @@ while((time() - $start_time) < 60)
 
 				// Error means a 20 minute delay before next check
 				if(isset($streaminfo->error))
+				{
+					if(TESTING_ENABLED) echo "\nResult: <b>Error</b>";
 					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=0, error=CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
+				}
 				// Update database with online status
 				elseif(isset($streaminfo->stream->channel->name))
 				{
+					if(TESTING_ENABLED) echo "\nResult: <b>Online</b>";
 					$displayName = $streaminfo->stream->channel->display_name;
 					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=1, lastUpdate = CURRENT_TIMESTAMP(), displayName = '$displayName' WHERE username='".$row["username"]."'");
 
 				}
 				else
+				{
+					if(TESTING_ENABLED) echo "\nResult: <b>Offline</b>";
 					$mysqli->query("UPDATE {$SQL_data["table"]} SET online=0, lastUpdate = CURRENT_TIMESTAMP() WHERE username='".$row["username"]."'");
+				}
 				break;
+				
 		}
+		if(TESTING_ENABLED) echo "</pre>";
 	}// for($i = 1; $i <= $number_of_results; $i++)
 
 	// Pauses between loops so as not to spam the API links. If there are no entries updated,

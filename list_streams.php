@@ -48,7 +48,7 @@ function URLvarsParsedIntosqlQuery($stream_names, $website, $SelectOrInsert)
 		"selects" => array(),
 		"inserts" => array()
 		);
-	foreach($streams as $value)
+	foreach($streams["unescaped"] as $value)
 	{
 		$streams['escaped'][$value] = mysqli_real_escape_string($mysqli, $value);
 	}

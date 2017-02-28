@@ -281,7 +281,17 @@ function AppendStreams(websites){
 					var appending_HTML = '<div class="holder live_stream_container '+value.displayName+'_stream" '+
 							'data-stream-name="'+value.displayName+'" data-website="'+value.Website+'">'
 					if(value.Website == 'twitch_tv'){				
-						appending_HTML +='<object type="application/x-shockwave-flash" '+
+						appending_HTML +=
+								'<iframe '+
+									'class="twitch_tv_stream live_stream" '+
+							        'src="https://player.twitch.tv/?channel='+value.displayName+'&auto_play=true&muted=true" '+
+							        'frameborder="0" '+
+							        'scrolling="no" '+
+							        'allowfullscreen="true">'+
+    							'</iframe>';
+
+
+    							/*'<object type="application/x-shockwave-flash" '+
 								'class="twitch_tv_stream live_stream" '+
 								'data="http://www.twitch.tv/widgets/live_embed_player.swf?channel='+value.displayName+'" '+
 								'bgcolor="#000000">'+
@@ -296,13 +306,14 @@ function AppendStreams(websites){
 										  'value="http://www.twitch.tv/widgets/live_embed_player.swf" />'+
 								'<param  name="flashvars" '+
 										  'value="hostname=www.twitch.tv&channel='+value.displayName+'&auto_play=true&start_volume=0" />'+
-								'</object>';
+								'</object>';*/
 						StreamChangeBool = 1;
 					// Hitbox iframe window
 					}else if(value.Website == 'hitbox_tv'){
 						appending_HTML +='<iframe src="http://hitbox.tv/#!/embed/'+value.displayName+'?autoplay=true" '+
 								'frameborder="0" '+
 								'allowfullscreen '+
+								'volume="0" '+
 								'class="hitbox_tv_stream live_stream">'+
 								'</iframe>';
 						StreamChangeBool = 1;
